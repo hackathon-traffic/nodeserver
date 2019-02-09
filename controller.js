@@ -24,10 +24,10 @@ router.get('/', (req, res) => {
     let options = {
         mode: 'text',
         //set your path to python
-        pythonPath: 'C:\\Users\\vidul\\AppData\\Local\\Programs\\Python\\Python37-32\\python.exe',
+        // pythonPath: 'C:\\Users\\vidul\\AppData\\Local\\Programs\\Python\\Python37-32\\python.exe',
         pythonOptions: ['-u'], // get print results in real-time
         //set your path to script
-        scriptPath: 'C:\\GitRepos\\nodeserver',
+        scriptPath: '/Users/iwilliamlee/Desktop/hackathon/nodeserver',
         args: ['-i', 'cat.jpg', '-c', 'yolov3.cfg', '-w', 'yolov3.weights', '-cl', 'yolov3.txt']
     };
 
@@ -65,6 +65,19 @@ router.post("/repos(/*)?", (req, res) => {
 
 });
 
+
+
+//Read from mpeg server
+router.get("/getImage", (req, res) => {
+    var webshot = require('webshot');
+    webshot('<html><body>Hello World</body></html>', 'hello_world.png', {siteType:'html'}, function(err) {
+        // screenshot now saved to hello_world.png
+        var img = fs.readFileSync('./hello_world.png');
+        res.writeHead(200, {'Content-Type': 'image' });
+        res.send(img, 'binary');
+      });
+});
+ 
 
 function readFromUrl(url) {
 
