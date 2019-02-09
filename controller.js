@@ -27,10 +27,10 @@ router.get('/', (req, res) => {
         pythonOptions: ['-u'], // get print results in real-time
         //set your path to script
         scriptPath: '/Users/iwilliamlee/Desktop/hackathon/nodeserver',
-        args: ['-i', 'cat.jpg', '-c', 'yolov3.cfg', '-w', 'yolov3.weights', '-cl', 'yolov3.txt']
+        // args: ['-i', 'cat.jpg', '-c', 'yolov3.cfg', '-w', 'yolov3.weights', '-cl', 'yolov3.txt']
     };
 
-    PythonShell.run('yolo.py', options, function (err, results) {
+    PythonShell.run('test.py', options, function (err, results) {
         if (err) throw err;
         // results is an array consisting of messages collected during execution
         console.log('results: j', results);
@@ -56,17 +56,37 @@ router.post("/repos(/*)?", (req, res) => {
 
 });
 
-
+router.get('/caltrans1', (req, res) => {
+    res.render('host');
+});
+ 
 
 //Read from mpeg server
-router.get("/getImage", (req, res) => {
+router.get("/getImage", async (req, res) => {
     var webshot = require('webshot');
-    webshot('<html><body>Hello World</body></html>', 'hello_world.png', {siteType:'html'}, function(err) {
-        // screenshot now saved to hello_world.png
-        var img = fs.readFileSync('./hello_world.png');
-        res.writeHead(200, {'Content-Type': 'image' });
-        res.send(img, 'binary');
-      });
+    var fs      = require('fs');
+
+    var options = {
+        screenSize: {
+          width: 320
+        , height: 480
+        },
+        styleType:'html',
+    };
+
+    var renderStream = webshot('http://localhost:8080/caltrans1', options);
+
+    var fileName = 'google';
+
+    var i;
+    for (i = 0; i < 10; i++) { 
+        await renderStream.on('data', function(data) {
+            var newFileName = fileName + i;
+            var file = fs.createWriteStream(newFileName + '.png', {encoding: 'binary'});
+            file.write(data.toString('binary'), 'binary');
+        });
+    }
+    res.send('Success');
 });
  
 
@@ -76,7 +96,6 @@ function readFromUrl(url) {
         // Use the buffer
         // buffer contains the image data
         // typeof buffer === 'object'
-
         console.log(buffer);
     });
 }
