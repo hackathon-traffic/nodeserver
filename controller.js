@@ -23,10 +23,10 @@ router.get('/', (req, res) => {
     let options = {
         mode: 'text',
         //set your path to python
-        pythonPath: 'C:\\Users\\vidul\\AppData\\Local\\Programs\\Python\\Python37-32\\python.exe',
+        // pythonPath: 'C:\\Users\\vidul\\AppData\\Local\\Programs\\Python\\Python37-32\\python.exe',
         pythonOptions: ['-u'], // get print results in real-time
         //set your path to script
-        scriptPath: 'C:\\GitRepos\\nodeserver',
+        scriptPath: '/Users/iwilliamlee/Desktop/hackathon/nodeserver',
         args: ['-i', 'cat.jpg', '-c', 'yolov3.cfg', '-w', 'yolov3.weights', '-cl', 'yolov3.txt']
     };
 
