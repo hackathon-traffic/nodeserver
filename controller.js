@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 var bodyParser = require('body-parser');
 const request = require('request');
+const webshot = require('webshot');
 
 
 let { PythonShell } = require('python-shell')
@@ -48,6 +49,14 @@ router.get('/', (req, res) => {
 router.post("/create/repo", (req, res) => {
 
 });
+
+router.get("/takescreenshot", (req, res) => {
+    webshot('https://www.google.com/', './screens/abcd.png', (err) => {
+        if (err) console.log(err);
+        else res.sendStatus(200);
+    })
+});
+
 
 
 //WILDCARD URL
