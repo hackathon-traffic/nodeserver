@@ -20,19 +20,21 @@ router.get('/', (req, res) => {
     console.log(__dirname);
     readFromUrl('https://picsum.photos/200/300');
 
-    // let options = {
-    //     mode: 'text',
-    //     // pythonPath: './',
-    //     // pythonOptions: ['-u'], // get print results in real-time
-    //     scriptPath: '/',
-    //     args: ['value1', 'value2', 'value3']
-    // };
+    let options = {
+        mode: 'text',
+        //set your path to python
+        pythonPath: 'C:\\Users\\vidul\\AppData\\Local\\Programs\\Python\\Python37-32\\python.exe',
+        pythonOptions: ['-u'], // get print results in real-time
+        //set your path to script
+        scriptPath: 'C:\\GitRepos\\nodeserver',
+        args: ['-i', 'cat.jpg', '-c', 'yolov3.cfg', '-w', 'yolov3.weights', '-cl', 'yolov3.txt']
+    };
 
-    // PythonShell.run('test.py', options, function (err, results) {
-    //     if (err) throw err;
-    //     // results is an array consisting of messages collected during execution
-    //     console.log('results: %j', results);
-    // });
+    PythonShell.run('yolo.py', options, function (err, results) {
+        if (err) throw err;
+        // results is an array consisting of messages collected during execution
+        console.log('results: j', results);
+    });
 
     res.render('index');
 
