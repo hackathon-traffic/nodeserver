@@ -3,6 +3,7 @@ from pydarknet import Detector, Image
 import argparse
 import cv2
 import os
+import json
 
 import time
 from watchdog.observers import Observer
@@ -39,7 +40,7 @@ class Handler(FileSystemEventHandler):
 def process_image(filename):
     input_img = './yolo/input/' + filename
     output_img = './yolo/output/' + filename
-    output_dat = './yolo/dat/' + filename.split('.')[0] + '.dat'
+    output_json = './yolo/dat/' + filename.split('.')[0] + '.json'
 
     img = cv2.imread(input_img)
     img2 = Image(img)
@@ -51,14 +52,19 @@ def process_image(filename):
     t = Transformer(index)
 
     results = net.detect(img2)
-    output = open(output_dat, 'w')
-    for cat, score, bounds in results:
-        x, y, w, h = bounds
 
-        cv2.rectangle(img, (int(x - w / 2), int(y - h / 2)), (int(x + w / 2), int(y + h / 2)), (255, 0, 0), thickness=2)
+    bounding_boxes = [det[2] for det in results]
+    detections = list()
+
+    # Draw bounding boxes on output image
+    for x, y, w, h in bounding_boxes:
+        cv2.rectangle(img, (int(x - w / 2), int(y - h / 2)), (int(x + w / 2), int(y + h / 2)), (255, 0, 0), thickness=1)
         cv2.imwrite(output_img, img)
-        output.write("%8d%8d\n" % (x, y))
-        output.write("%8d%8d\n\n" % t.transform(x, y, width, height))
+        detections.append(t.transform(x, y, width, height))
+
+    # Write to JSON data file
+    output = open(output_json, 'w')
+    json.dump(detections, output, indent=4)
 
 if __name__ == "__main__":
     darknet_path = os.environ['DARKNET_HOME']

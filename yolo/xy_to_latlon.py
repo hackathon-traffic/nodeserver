@@ -11,7 +11,6 @@ class Transformer:
         self.down_look_angle = radians(camera_data['down_look_angle'])
 
     def transform(self, x, y, width, height):
-        print('transforming coords')
         # Transform X and Y to [-1,1] scale
         x = (x - width // 2) / (height // 2)
         y = ((height // 2) - y) / (height // 2)
