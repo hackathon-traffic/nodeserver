@@ -20,18 +20,6 @@ router.use(bodyParser.json());
 router.get('/', (req, res) => {
     console.log(__dirname);
     readFromUrl('https://picsum.photos/200/300');
-    let options = {
-        mode: 'text',
-        pythonOptions: ['-u'], // get print results in real-time
-        scriptPath: __dirname + '/pyshells',
-    };
-
-    PythonShell.run('test1.py', options, function (err, results) {
-        if (err) console.log(err);
-        // results is an array consisting of messages collected during execution
-        console.log('results: j', results);
-    });
-
     res.render('index');
 
 });
