@@ -14,6 +14,7 @@ app.use(controller);
 app.use('', controller);
 app.use(express.static(publicPath));
 
+var msg = ""
 
 var server = require('http').createServer(app);
 var socket = require('socket.io')(server);
@@ -25,7 +26,7 @@ socket.on('connect', (socket) => {
 
     socket.on('filename', (msg) => {
         console.log('Got the emitted file ' + msg.filename);
-        var watcher = chokidar.watch(__dirname + '/yolo/dat/' + msg.filename + '.dat', {
+        var watcher = chokidar.watch(__dirname + '/yolo/dat/' + msg.filename + '.json', {
             ignored: /(^|[\/\\])\../,
             persistent: true
         });
@@ -43,17 +44,17 @@ socket.on('connect', (socket) => {
 
 function emitImageBuffer(privateSocket, filename) {
     console.log(filename);
-    fs.readFile(__dirname + '/yolo/output/' + filename + '.jpg', function (err, imgBuffer) {
+    
+    fs.readFile(__dirname + '/yolo/output/' + filename + '.jpg',  function (err, imgBuffer) {
 
-        fs.readFile(__dirname + '/yolo/output/' + filename + '.jpg', (err, textBuffer) => {
-            console.log(imgBuffer);
+        fs.readFile(__dirname + '/yolo/dat/' + filename + '.json', (err, textBuffer) => {
+            let text = textBuffer;
             privateSocket.emit('image', {
                 image: true, buffer: imgBuffer.toString('base64')
             });
-            privateSocket.emit('text', {
-                image: false, buffer: textBuffer
-            });
-        })
+            privateSocket.emit('text', msg);
+        });
+
 
     });
 }
@@ -70,14 +71,18 @@ server.listen(port, () => {
     let pyOptions = {
         mode: 'text',
         pythonOptions: ['-u'],
+        stdout: [],
         scriptPath: YOLO_DIR
     };
 
     let pyshell = PythonShell.run('yolo_watcher.py', pyOptions, function(err) {
         if(err) { throw err; }
-        // console.log(results)
     });
 
+    pyshell.stdout.on('data', function(data) {
+        console.log("@@@@@@")
+        msg = data
+    });
     // Pass python error statements
     pyshell.on('stderr', function(stderr) {
         console.log(stderr)
