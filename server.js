@@ -22,7 +22,7 @@ const {PythonShell} = require('python-shell')
 const {exec} = require('child_process')
 
 const YOLO_DIR = './yolo/'
-const INTERVAL = 5000
+const INTERVAL = 2000
 
 server.listen(port, () => {
     let pyOptions = {
@@ -41,11 +41,14 @@ server.listen(port, () => {
         console.log(message);
     });
 
-    setInterval(scrape, INTERVAL, 1, 'rtmp://wzmedia.dot.ca.gov:1935/D4/W80_at_Carlson_Blvd_OFR.stream');
-    setInterval(scrape, INTERVAL, 2, 'rtmp://wzmedia.dot.ca.gov:1935/D4/E580_Lower_Deck_Pier_16.stream');
-    setInterval(scrape, INTERVAL, 3, 'rtmp://wzmedia.dot.ca.gov:1935/D4/S101_at_Airport_Bl.stream');
-    setInterval(scrape, INTERVAL, 4, 'rtmp://wzmedia.dot.ca.gov/D4/W80_at_Ashby.stream');
-    
+    // Init web scraper based on JSON config file
+    let cameras = require('./cameras.json')
+    cameras.forEach(function(element) {
+        index = element.index
+        url = element.url
+        setInterval(scrape, INTERVAL, index, url)
+    });
+
     function scrape(index, url) {
         let script = 'ffmpeg -y -i ' + url + ' ' + YOLO_DIR + 'input/' + 'location' + index + '.jpg'
         exec(script)

@@ -35,6 +35,7 @@ router.get('/', (req, res) => {
 
 
 
+<<<<<<< HEAD
 
 
 
@@ -52,11 +53,14 @@ router.post("/repos(/*)?", (req, res) => {
 
 });
 
+=======
+>>>>>>> 0f157cf9df353da35d68bfaad1b936440678c0fd
 router.get('/caltrans1', (req, res) => {
     res.render('host');
 });
  
 
+<<<<<<< HEAD
 //Read from mpeg server
 router.get("/getImage", async (req, res) => {
     var webshot = require('webshot');
@@ -85,6 +89,8 @@ router.get("/getImage", async (req, res) => {
     res.send('Success');
 });
 
+=======
+>>>>>>> 0f157cf9df353da35d68bfaad1b936440678c0fd
 
 function readFromUrl(url) {
 
