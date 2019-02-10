@@ -6,7 +6,9 @@
         "camera_height": 10,
         "vertical_fov": 75,
         "rotation_angle": -74,
-        "down_angle": 10
+        "down_angle": 10,
+        "latitude": 37.9310561,
+        "longitude": -122.3459139
     },
 
     {
@@ -16,7 +18,9 @@
         "camera_height": 10,
         "vertical_fov": 75,
         "rotation_angle": -74,
-        "down_angle": 10
+        "down_angle": 10,
+        "latitude": 37.9373659,
+        "longitude": -122.4726188
     },
 
     {
@@ -26,7 +30,9 @@
         "camera_height": 10,
         "vertical_fov": 75,
         "rotation_angle": -74,
-        "down_angle": 10
+        "down_angle": 10,
+        "latitude": 37.6501389,
+        "longitude": -122.4093554
     },
 
     {
@@ -36,6 +42,8 @@
         "camera_height": 10,
         "vertical_fov": 75,
         "rotation_angle": -74,
-        "down_angle": 10
+        "down_angle": 10,
+        "latitude": 37.8520778,
+        "longitude": -122.2972928
     }
 ]
