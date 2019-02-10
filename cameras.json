@@ -12,7 +12,7 @@
     {
         "index": 2,
         "name": "E580 Lower Deck Pier",
-        "url": "rtmp://wzmedia.dot.ca.gov:1935/D4/E580_Lower_Deck_Pier_16.stream')",
+        "url": "rtmp://wzmedia.dot.ca.gov:1935/D4/E580_Lower_Deck_Pier_16.stream",
         "camera_height": 10,
         "vertical_fov": 75,
         "rotation_angle": -74,
@@ -22,7 +22,7 @@
     {
         "index": 3,
         "name": "S101 S Airport Blvd",
-        "url": "rtmp://wzmedia.dot.ca.gov:1935/D4/S101_at_Airport_Bl.stream')",
+        "url": "rtmp://wzmedia.dot.ca.gov:1935/D4/S101_at_Airport_Bl.stream",
         "camera_height": 10,
         "vertical_fov": 75,
         "rotation_angle": -74,
@@ -32,7 +32,7 @@
     {
         "index": 4,
         "name": "W80 Ashby Ave",
-        "url": "rtmp://wzmedia.dot.ca.gov/D4/W80_at_Ashby.stream')",
+        "url": "rtmp://wzmedia.dot.ca.gov/D4/W80_at_Ashby.stream",
         "camera_height": 10,
         "vertical_fov": 75,
         "rotation_angle": -74,

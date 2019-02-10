@@ -27,60 +27,11 @@ router.get('/', (req, res) => {
 
 
 
-
-//CREATE NEW REPO
-router.post("/create/repo", (req, res) => {
-
-});
-
-router.get("/takescreenshot", (req, res) => {
-    webshot('https://www.google.com/', './screens/abcd.png', (err) => {
-        if (err) console.log(err);
-        else res.sendStatus(200);
-    })
-});
-
-
-
-//WILDCARD URL
-router.post("/repos(/*)?", (req, res) => {
-
-
-});
-
 router.get('/caltrans1', (req, res) => {
     res.render('host');
 });
  
 
-//Read from mpeg server
-router.get("/getImage", async (req, res) => {
-    var webshot = require('webshot');
-    var fs      = require('fs');
-
-    var options = {
-        screenSize: {
-          width: 320
-        , height: 480
-        },
-        styleType:'html',
-    };
-
-    var renderStream = webshot('http://localhost:8080/caltrans1', options);
-
-    var fileName = 'google';
-
-    var i;
-    for (i = 0; i < 10; i++) { 
-        await renderStream.on('data', function(data) {
-            var newFileName = fileName + i;
-            var file = fs.createWriteStream(newFileName + '.png', {encoding: 'binary'});
-            file.write(data.toString('binary'), 'binary');
-        });
-    }
-    res.send('Success');
-});
- 
 
 function readFromUrl(url) {
 
