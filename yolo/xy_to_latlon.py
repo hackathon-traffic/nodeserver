@@ -33,4 +33,4 @@ class Transformer:
         lon = self.longitude + degrees(E / 6.371E6) / cos(radians(self.latitude))
         lat = self.latitude + degrees(N / 6.371E6)
 
-        return (lat, lon)
+        return (N, E, lat, lon)

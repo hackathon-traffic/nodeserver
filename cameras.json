@@ -6,9 +6,9 @@
         "latitude": 0,
         "longitude": 0,
         "camera_height": 10,
-        "vertical_fov": 75,
-        "azimuthal_angle": -74,
-        "down_look_angle": 10
+        "vertical_fov": 65,
+        "azimuthal_angle": 77,
+        "down_look_angle": 15
     },
 
     {
@@ -29,10 +29,10 @@
         "url": "rtmp://wzmedia.dot.ca.gov:1935/D4/S101_at_Airport_Bl.stream",
         "latitude": 0,
         "longitude": 0,
-        "camera_height": 10,
-        "vertical_fov": 75,
-        "azimuthal_angle": -74,
-        "down_look_angle": 10
+        "camera_height": 13,
+        "vertical_fov": 65,
+        "azimuthal_angle": 190,
+        "down_look_angle": 22
     },
 
     {

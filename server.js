@@ -64,7 +64,7 @@ const {PythonShell} = require('python-shell')
 const {exec} = require('child_process')
 
 const YOLO_DIR = './yolo/'
-const INTERVAL = 1000
+const INTERVAL = 3000
 
 server.listen(port, () => {
     let pyOptions = {
