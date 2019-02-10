@@ -30,6 +30,7 @@ socket.on('connect', (socket) => {
 
 
     socket.on('filename', (msg) => {
+        console.log('Got the emitted file');
         var watcher = chokidar.watch(__dirname + '/screens/' + msg.filename, {
             ignored: /(^|[\/\\])\../,
             persistent: true
@@ -37,7 +38,7 @@ socket.on('connect', (socket) => {
         watcher
 
             .on('change', path => {
-                console.log('cheanged');
+                console.log('😋');
                 emitImageBuffer(socket)
             })
 
@@ -55,6 +56,8 @@ function emitImageBuffer(privateSocket) {
     fs.readFile(__dirname + '/screens/abcd.png', function (err, imgBuffer) {
 
         fs.readFile(__dirname + '/screens/abcd.png', (err, textBuffer) => {
+            console.log(imgBuffer);
+            console.log(textBuffer);
             privateSocket.emit('image', {
                 image: true, buffer: imgBuffer.toString('base64')
             });
