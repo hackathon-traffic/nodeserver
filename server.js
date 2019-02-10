@@ -68,7 +68,7 @@ const {PythonShell} = require('python-shell')
 const {exec} = require('child_process')
 
 const YOLO_DIR = './yolo/'
-const INTERVAL = 2000
+const INTERVAL = 1000
 
 server.listen(port, () => {
     let pyOptions = {
@@ -80,6 +80,11 @@ server.listen(port, () => {
     let pyshell = PythonShell.run('yolo_watcher.py', pyOptions, function(err) {
         if(err) { throw err; }
         // console.log(results)
+    });
+
+    // Pass python error statements
+    pyshell.on('stderr', function(stderr) {
+        console.log(stderr)
     });
 
     // Pass Python print statements from stdout

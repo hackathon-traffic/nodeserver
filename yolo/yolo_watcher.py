@@ -32,34 +32,33 @@ class Watcher:
 class Handler(FileSystemEventHandler):
     @staticmethod
     def on_modified(event):
-        if(event.src_path.endswith(('.png', '.jpg', '.jpeg'))):
-            # print("Updated image file %s" % event.src_path)
-            process_image(event.src_path)
+        filename = os.path.basename(event.src_path)
+        if(filename.endswith(('.png', '.jpg', '.jpeg'))):
+            process_image(filename)
 
-def process_image(image_path):
-    output_dat = './yolo/dat/' + image_path.split('/')[-1].split('.')[0] + '.dat'
-    output_img = './yolo/output/' + image_path.split('/')[-1]
+def process_image(filename):
+    input_img = './yolo/input/' + filename
+    output_img = './yolo/output/' + filename
+    output_dat = './yolo/dat/' + filename.split('.')[0] + '.dat'
 
-    img = cv2.imread(image_path)
+    img = cv2.imread(input_img)
     img2 = Image(img)
-    img_height = float(img.shape[0])
-    img_width = float(img.shape[1])
+    height = float(img.shape[0])
+    width = float(img.shape[1])
 
-    t = Transformer(img_width, img_height)
+    # Load Camera metadata from JSON file for transform
+    index = int(filename.split('.')[0][-1]) - 1
+    t = Transformer(index)
 
     results = net.detect(img2)
     output = open(output_dat, 'w')
-    output.write("%d\t%d\n" % (img_width, img_height))
-    output.write("\n")
     for cat, score, bounds in results:
         x, y, w, h = bounds
 
-        output.write("%8d%8d\n" % (x, y))
-        output.write("%8d%8d\n\n" % t.transform(x, y))
         cv2.rectangle(img, (int(x - w / 2), int(y - h / 2)), (int(x + w / 2), int(y + h / 2)), (255, 0, 0), thickness=2)
         cv2.imwrite(output_img, img)
-
-    # print('%d Detections logged in %s' % (len(results), output_dat))
+        output.write("%8d%8d\n" % (x, y))
+        output.write("%8d%8d\n\n" % t.transform(x, y, width, height))
 
 if __name__ == "__main__":
     darknet_path = os.environ['DARKNET_HOME']

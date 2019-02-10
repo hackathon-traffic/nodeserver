@@ -5,8 +5,8 @@
         "url": "rtmp://wzmedia.dot.ca.gov:1935/D4/W80_at_Carlson_Blvd_OFR.stream",
         "camera_height": 10,
         "vertical_fov": 75,
-        "rotation_angle": -74,
-        "down_angle": 10
+        "azimuthal_angle": -74,
+        "down_look_angle": 10
     },
 
     {
@@ -15,8 +15,8 @@
         "url": "rtmp://wzmedia.dot.ca.gov:1935/D4/E580_Lower_Deck_Pier_16.stream",
         "camera_height": 10,
         "vertical_fov": 75,
-        "rotation_angle": -74,
-        "down_angle": 10
+        "azimuthal_angle": -74,
+        "down_look_angle": 10
     },
 
     {
@@ -25,8 +25,8 @@
         "url": "rtmp://wzmedia.dot.ca.gov:1935/D4/S101_at_Airport_Bl.stream",
         "camera_height": 10,
         "vertical_fov": 75,
-        "rotation_angle": -74,
-        "down_angle": 10
+        "azimuthal_angle": -74,
+        "down_look_angle": 10
     },
 
     {
@@ -35,7 +35,7 @@
         "url": "rtmp://wzmedia.dot.ca.gov/D4/W80_at_Ashby.stream",
         "camera_height": 10,
         "vertical_fov": 75,
-        "rotation_angle": -74,
-        "down_angle": 10
+        "azimuthal_angle": -74,
+        "down_look_angle": 10
     }
 ]

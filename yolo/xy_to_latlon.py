@@ -1,31 +1,32 @@
-from numpy import pi, sin, cos, tan
+from numpy import sin, cos, tan, radians
+import json
 
 class Transformer:
-    def __init__(self, width, height):
-        self.width = width
-        self.height = height
-        self.camera_height = 10
-        self.vfov = 75 * pi/180
-        self.rotation_angle = -74 * pi/180
-        self.down_angle = 10 * pi/180
+    def __init__(self, index):
+        camera_data = json.load(open('./cameras.json'))[index]
 
-    def transform(self, x, y):
+        self.camera_height = camera_data['camera_height']
+        self.vfov = radians(camera_data['vertical_fov'])
+        self.azimuthal_angle = radians(camera_data['azimuthal_angle'])
+        self.down_look_angle = radians(camera_data['down_look_angle'])
+
+    def transform(self, x, y, width, height):
+        print('transforming coords')
         # Transform X and Y to [-1,1] scale
-        x = (x - self.width // 2) / (self.height // 2)
-        y = ((self.height // 2) - y) / (self.height // 2)
-
+        x = (x - width // 2) / (height // 2)
+        y = ((height // 2) - y) / (height // 2)
 
         # Transform X and Y to actual meter away from pole
         tan_vfov = tan(self.vfov / 2)
         x = self.camera_height * (x * tan_vfov) / (
-            sin(self.down_angle) - y * cos(self.down_angle) * tan_vfov)
-        y = self.camera_height * (cos(self.down_angle) + y * sin(self.down_angle)*tan_vfov) / (
-            sin(self.down_angle) - y * cos(self.down_angle) * tan_vfov)
+            sin(self.down_look_angle) - y * cos(self.down_look_angle) * tan_vfov)
+        y = self.camera_height * (cos(self.down_look_angle) + y * sin(self.down_look_angle)*tan_vfov) / (
+            sin(self.down_look_angle) - y * cos(self.down_look_angle) * tan_vfov)
 
         if(y < 0 or y > 1000):
             (E, N) = (0,0)
         else:
-            E = cos(self.rotation_angle) * x - sin(self.rotation_angle) * y
-            N = sin(self.rotation_angle) * x + cos(self.rotation_angle) * y
+            E = cos(self.azimuthal_angle) * x - sin(self.azimuthal_angle) * y
+            N = sin(self.azimuthal_angle) * x + cos(self.azimuthal_angle) * y
 
         return (E, N)
