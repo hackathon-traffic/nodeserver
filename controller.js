@@ -20,6 +20,26 @@ router.use(bodyParser.json());
 router.get('/', (req, res) => {
     console.log(__dirname);
     readFromUrl('https://picsum.photos/200/300');
+<<<<<<< HEAD
+=======
+
+    let options = {
+        mode: 'text',
+        //set your path to python
+        // pythonPath: 'C:\\Users\\vidul\\AppData\\Local\\Programs\\Python\\Python37-32\\python.exe',
+        pythonOptions: ['-u'], // get print results in real-time
+        //set your path to script
+        scriptPath: '',
+        args: []
+    };
+
+    PythonShell.run('test.py', options, function (err, results) {
+        if (err) throw err;
+        // results is an array consisting of messages collected during execution
+        console.log('results: j', results);
+    });
+
+>>>>>>> 3332e47eb6ea119bdfc1337f2abb015f46eb3d4d
     res.render('index');
 
 });
