@@ -17,6 +17,12 @@ app.use(express.static(publicPath));
 
 var server = require('http').createServer(app);
 var socket = require('socket.io')(server);
+// Initialize watcher.
+
+
+// openvideocontroller(app, socket);
+
+
 
 socket.on('connect', (socket) => {
     console.log(socket.id);
@@ -25,7 +31,7 @@ socket.on('connect', (socket) => {
 
     socket.on('filename', (msg) => {
         console.log('Got the emitted file');
-        var watcher = chokidar.watch(__dirname + '/yolo/dat/location1.dat', {
+        var watcher = chokidar.watch(__dirname + '/screens/' + msg.filename, {
             ignored: /(^|[\/\\])\../,
             persistent: true
         });
@@ -47,10 +53,11 @@ socket.on('connect', (socket) => {
 
 
 function emitImageBuffer(privateSocket) {
-    fs.readFile(__dirname + '/yolo/output/location2.jpg', function (err, imgBuffer) {
+    fs.readFile(__dirname + '/screens/abcd.png', function (err, imgBuffer) {
 
-        fs.readFile(__dirname + '/yolo/output/location2.jpg', (err, textBuffer) => {
+        fs.readFile(__dirname + '/screens/abcd.png', (err, textBuffer) => {
             console.log(imgBuffer);
+            console.log(textBuffer);
             privateSocket.emit('image', {
                 image: true, buffer: imgBuffer.toString('base64')
             });
@@ -64,40 +71,6 @@ function emitImageBuffer(privateSocket) {
 
 app.set('view engine', 'ejs');
 
-const {PythonShell} = require('python-shell')
-const {exec} = require('child_process')
-
-const YOLO_DIR = './yolo/'
-const INTERVAL = 2000
-
 server.listen(port, () => {
-    let pyOptions = {
-        mode: 'text',
-        pythonOptions: ['-u'],
-        scriptPath: YOLO_DIR
-    };
-
-    let pyshell = PythonShell.run('yolo_watcher.py', pyOptions, function(err) {
-        if(err) { throw err; }
-        // console.log(results)
-    });
-
-    // Pass Python print statements from stdout
-    pyshell.on('message', function(message) {
-        console.log(message);
-    });
-
-    // Init web scraper based on JSON config file
-    let cameras = require('./cameras.json')
-    cameras.forEach(function(element) {
-        index = element.index
-        url = element.url
-        setInterval(scrape, INTERVAL, index, url)
-    });
-
-    function scrape(index, url) {
-        let script = 'ffmpeg -y -i ' + url + ' ' + YOLO_DIR + 'input/' + 'location' + index + '.jpg'
-        exec(script)
-    };
     console.log("Server started on port" + port);
 });
