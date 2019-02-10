@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 var bodyParser = require('body-parser');
 const request = require('request');
-const webshot = require('webshot');
+
 
 
 let { PythonShell } = require('python-shell')
@@ -17,6 +17,14 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
 
+
+
+
+
+router.get('/hostpage', (req, res) => {
+    res.render('host');
+})
+
 router.get('/', (req, res) => {
     console.log(__dirname);
     readFromUrl('https://picsum.photos/200/300');
@@ -28,17 +36,13 @@ router.get('/', (req, res) => {
 
 
 
+
+
 //CREATE NEW REPO
 router.post("/create/repo", (req, res) => {
 
 });
 
-router.get("/takescreenshot", (req, res) => {
-    webshot('https://www.google.com/', './screens/abcd.png', (err) => {
-        if (err) console.log(err);
-        else res.sendStatus(200);
-    })
-});
 
 
 
@@ -80,7 +84,7 @@ router.get("/getImage", async (req, res) => {
     }
     res.send('Success');
 });
- 
+
 
 function readFromUrl(url) {
 

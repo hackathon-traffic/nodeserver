@@ -3,11 +3,17 @@ const port = 8080;
 const path = require('path');
 const express = require('express');
 const controller = require('./controller.js');
+const publicPath = path.join(__dirname + '/public');
+const fs = require('fs');
+const chokidar = require('chokidar');
+const openvideocontroller = require('./openvideocontroller.js');
 
 //for using http server instead of express server 
 var app = express();
 app.use(controller);
 app.use('', controller);
+app.use(express.static(publicPath));
+
 
 var server = require('http').createServer(app);
 app.set('view engine', 'ejs');
