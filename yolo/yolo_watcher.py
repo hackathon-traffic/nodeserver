@@ -8,6 +8,8 @@ import time
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
+from xy_to_latlon import Transformer
+
 class Watcher:
     def __init__(self):
         self.DIRECTORY_TO_WATCH = './yolo/input'
@@ -54,6 +56,8 @@ def process_image(image_path):
     img_height = float(img.shape[0])
     img_width = float(img.shape[1])
 
+    t = Transformer(img_width, img_height)
+
     results = net.detect(img2)
     output = open(output_dat, 'w')
     output.write("%d\t%d\n" % (img_width, img_height))
@@ -61,9 +65,8 @@ def process_image(image_path):
     for cat, score, bounds in results:
         x, y, w, h = bounds
 
-        x_scaled = (2*x / img_height) - 1
-        y_scaled = (2*(img_height-y) / img_height) - 1
-        output.write("%d\t%d\n" % (x, y))
+        output.write("%8d%8d\n" % (x, y))
+        output.write("%8d%8d\n\n" % t.transform(x, y))
         cv2.rectangle(img, (int(x - w / 2), int(y - h / 2)), (int(x + w / 2), int(y + h / 2)), (255, 0, 0), thickness=2)
         cv2.imwrite(output_img, img)
 
