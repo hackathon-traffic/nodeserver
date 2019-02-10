@@ -29,23 +29,12 @@ class Watcher:
 
         self.observer.join()
 
-
 class Handler(FileSystemEventHandler):
     @staticmethod
     def on_modified(event):
         if(event.src_path.endswith(('.png', '.jpg', '.jpeg'))):
             print("Updated image file %s" % event.src_path)
             process_image(event.src_path)
-
-    # def on_any_event(event):
-    #     if event.is_directory:
-    #         return None
-
-    #     elif(event.event_type == 'modified' and
-    #          event.src_path.endswith(('.png', '.jpg', '.jpeg'))):
-    #         print("Received image file %s" % event.src_path)
-    #         process_image(event.src_path)
-
 
 def process_image(image_path):
     output_dat = './yolo/dat/' + image_path.split('/')[-1].split('.')[0] + '.dat'
