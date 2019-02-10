@@ -24,21 +24,16 @@ socket.on('connect', (socket) => {
 
 
     socket.on('filename', (msg) => {
-        console.log('Got the emitted file');
-        var watcher = chokidar.watch(__dirname + '/yolo/dat/location1.dat', {
+        console.log('Got the emitted file ' + msg.filename);
+        var watcher = chokidar.watch(__dirname + '/yolo/dat/' + msg.filename + '.dat', {
             ignored: /(^|[\/\\])\../,
             persistent: true
         });
-        watcher
-
-            .on('change', path => {
-                console.log('😋');
-                emitImageBuffer(socket)
-            })
-
+        watcher.on('change', path => {
+            console.log('😋');
+            emitImageBuffer(socket, msg.filename)
+        })
     })
-
-
     socket.on('disconnect', () => {
         console.log("socket disconnected");
     })
@@ -46,10 +41,11 @@ socket.on('connect', (socket) => {
 
 
 
-function emitImageBuffer(privateSocket) {
-    fs.readFile(__dirname + '/yolo/output/location2.jpg', function (err, imgBuffer) {
+function emitImageBuffer(privateSocket, filename) {
+    console.log(filename);
+    fs.readFile(__dirname + '/yolo/output/' + filename + '.jpg', function (err, imgBuffer) {
 
-        fs.readFile(__dirname + '/yolo/output/location2.jpg', (err, textBuffer) => {
+        fs.readFile(__dirname + '/yolo/output/' + filename + '.jpg', (err, textBuffer) => {
             console.log(imgBuffer);
             privateSocket.emit('image', {
                 image: true, buffer: imgBuffer.toString('base64')
