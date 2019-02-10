@@ -33,7 +33,7 @@ class Handler(FileSystemEventHandler):
     @staticmethod
     def on_modified(event):
         if(event.src_path.endswith(('.png', '.jpg', '.jpeg'))):
-            print("Updated image file %s" % event.src_path)
+            # print("Updated image file %s" % event.src_path)
             process_image(event.src_path)
 
 def process_image(image_path):
@@ -59,7 +59,7 @@ def process_image(image_path):
         cv2.rectangle(img, (int(x - w / 2), int(y - h / 2)), (int(x + w / 2), int(y + h / 2)), (255, 0, 0), thickness=2)
         cv2.imwrite(output_img, img)
 
-    print('%d Detections logged in %s' % (len(results), output_dat))
+    # print('%d Detections logged in %s' % (len(results), output_dat))
 
 if __name__ == "__main__":
     darknet_path = os.environ['DARKNET_HOME']
