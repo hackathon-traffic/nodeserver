@@ -1,42 +1,36 @@
-import math
-import argparse
+from numpy import pi, sin, cos, tan
+
+class Transformer:
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+        self.camera_height = 10
+        self.vfov = 75 * pi/180
+        self.rotation_angle = -74 * pi/180
+        self.down_angle = 10 * pi/180
+
+    def transform(self, x, y):
+        if((self.down_angle - self.vfov) / 2 < 0):
+            print('Too high')
 
 
-def alg():
-    f = open(args.file, "r")
-
-    first_line = f.readline()
-    hrez_half, vrez_half = first_line.split()
-   
-    hrez_half = int(hrez_half) // 2
-    vrez_half = int(vrez_half) // 2
-    
-    for line in f:
-        _h, _v = line.split()
-        _h = int(_h)
-        _v = int(_v)
-
-        _x = (_h - hrez_half) / vrez_half
-        _y = (vrez_half - _v) / vrez_half
-
-        getCoordinate(_x, _y)
+        # Transform X and Y to [-1,1] scale
+        x = (x - self.width // 2) / (self.height // 2)
+        y = ((self.height // 2) - y) / (self.height // 2)
 
 
-def getCoordinate(x_s, y_s):
-    E = camera_height * ((x_s * math.tan(vfov / 2) * math.cos(rotation_angle)) - ( math.cos(down_angle) + y_s * math.sin(down_angle) * math.tan(vfov / 2) * math.sin(rotation_angle) )) / (math.sin(down_angle) - y_s * math.cos(down_angle) * math.tan(vfov / 2) )
-    N = camera_height * ((x_s * math.tan(vfov / 2) * math.sin(rotation_angle)) + ( math.cos(down_angle) + y_s * math.sin(down_angle) * math.tan(vfov / 2) * math.cos(rotation_angle) )) / (math.sin(down_angle) - y_s * math.cos(down_angle) * math.tan(vfov / 2) )
+        tan_vfov = tan(self.vfov / 2)
+        # Transform X and Y to actual meter away from pole
+        x = self.camera_height * (x * tan_vfov) / (
+            sin(self.down_angle) - y * cos(self.down_angle) * tan_vfov)
+        y = self.camera_height * (cos(self.down_angle) + y * sin(self.down_angle)*tan_vfov) / (
+            sin(self.down_angle) - y * cos(self.down_angle) * tan_vfov)
 
-    print(E, N)
+
+        E = cos(self.rotation_angle) * x - sin(self.rotation_angle) * y
+        N = sin(self.rotation_angle) * x + cos(self.rotation_angle) * y
 
 
-if __name__ == "__main__":
-    ap = argparse.ArgumentParser()
-    ap.add_argument('-f', '--file', required=True,
-                help = 'path to input file')
-args = ap.parse_args()
 
-camera_height = 10
-vfov = 70 * math.pi/180
-rotation_angle = -15 * math.pi/180
-down_angle = 30 * math.pi/180
-    alg()
+
+        return (E, N)
