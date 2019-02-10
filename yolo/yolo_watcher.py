@@ -10,7 +10,7 @@ from watchdog.events import FileSystemEventHandler
 
 class Watcher:
     def __init__(self):
-        self.DIRECTORY_TO_WATCH = './input'
+        self.DIRECTORY_TO_WATCH = './yolo/input'
         print('Watching \'%s\' directory for images' % self.DIRECTORY_TO_WATCH)
         self.observer = Observer()
 
@@ -30,19 +30,25 @@ class Watcher:
 
 class Handler(FileSystemEventHandler):
     @staticmethod
-    def on_any_event(event):
-        if event.is_directory:
-            return None
-
-        elif(event.event_type == 'created' and
-             event.src_path.endswith(('.png', '.jpg', '.jpeg'))):
-            print("Received image file %s" % event.src_path)
+    def on_modified(event):
+        if(event.src_path.endswith(('.png', '.jpg', '.jpeg'))):
+            print("Updated image file %s" % event.src_path)
             process_image(event.src_path)
+
+    # def on_any_event(event):
+    #     if event.is_directory:
+    #         return None
+
+    #     elif(event.event_type == 'modified' and
+    #          event.src_path.endswith(('.png', '.jpg', '.jpeg'))):
+    #         print("Received image file %s" % event.src_path)
+    #         process_image(event.src_path)
 
 
 def process_image(image_path):
-    output_dat = './dat/' + image_path.split('/')[-1].split('.')[0] + '.dat'
-    output_img = './output/' + image_path.split('/')[-1]
+    output_dat = './yolo/dat/' + image_path.split('/')[-1].split('.')[0] + '.dat'
+    output_img = './yolo/output/' + image_path.split('/')[-1]
+
     img = cv2.imread(image_path)
     img2 = Image(img)
     img_height = float(img.shape[0])

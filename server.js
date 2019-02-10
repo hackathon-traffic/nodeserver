@@ -10,19 +10,38 @@ app.use(controller);
 app.use('', controller);
 
 var server = require('http').createServer(app);
-const {exec} = require('child_process')
-
 app.set('view engine', 'ejs');
 
+const {PythonShell} = require('python-shell')
+const {exec} = require('child_process')
+
+const YOLO_DIR = './yolo/'
+const INTERVAL = 1000
+
 server.listen(port, () => {
-    
-    setInterval(scrape, 200, 1, 'rtmp://wzmedia.dot.ca.gov:1935/D4/W80_at_Carlson_Blvd_OFR.stream');
-    setInterval(scrape, 200, 2, 'rtmp://wzmedia.dot.ca.gov:1935/D4/E580_Lower_Deck_Pier_16.stream');
-    setInterval(scrape, 200, 3, 'rtmp://wzmedia.dot.ca.gov:1935/D4/S101_at_Airport_Bl.stream');
-    setInterval(scrape, 200, 4, 'rtmp://wzmedia.dot.ca.gov/D4/W80_at_Ashby.stream');
+    let pyOptions = {
+        mode: 'text',
+        pythonOptions: ['-u'],
+        scriptPath: YOLO_DIR
+    };
+
+    let pyshell = PythonShell.run('yolo_watcher.py', pyOptions, function(err) {
+        if(err) { throw err; }
+        console.log(results)
+    });
+
+    // Pass Python print statements from stdout
+    pyshell.on('message', function(message) {
+        console.log(message);
+    });
+
+    setInterval(scrape, INTERVAL, 1, 'rtmp://wzmedia.dot.ca.gov:1935/D4/W80_at_Carlson_Blvd_OFR.stream');
+    setInterval(scrape, INTERVAL, 2, 'rtmp://wzmedia.dot.ca.gov:1935/D4/E580_Lower_Deck_Pier_16.stream');
+    setInterval(scrape, INTERVAL, 3, 'rtmp://wzmedia.dot.ca.gov:1935/D4/S101_at_Airport_Bl.stream');
+    setInterval(scrape, INTERVAL, 4, 'rtmp://wzmedia.dot.ca.gov/D4/W80_at_Ashby.stream');
     
     function scrape(index, url) {
-        script = 'ffmpeg -y -i ' + url + ' yolo/input/' + 'location' + index + '.jpg'
+        let script = 'ffmpeg -y -i ' + url + ' ' + YOLO_DIR + 'input/' + 'location' + index + '.jpg'
         exec(script)
     };
 
