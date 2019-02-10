@@ -60,7 +60,8 @@ def process_image(filename):
     for x, y, w, h in bounding_boxes:
         cv2.rectangle(img, (int(x - w / 2), int(y - h / 2)), (int(x + w / 2), int(y + h / 2)), (255, 0, 0), thickness=1)
         cv2.imwrite(output_img, img)
-        detections.append(t.transform(x, y, width, height))
+        (lat, lon) = t.transform(x, y, width, height)
+        detections.append({"latitude": lat, "longitude": lon})
 
     # Write to JSON data file
     output = open(output_json, 'w')
