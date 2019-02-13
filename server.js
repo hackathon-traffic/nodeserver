@@ -65,7 +65,7 @@ const {PythonShell} = require('python-shell')
 const {exec} = require('child_process')
 
 const YOLO_DIR = './yolo/'
-const INTERVAL = 3000
+const INTERVAL = 1000
 
 server.listen(port, () => {
     let pyOptions = {
@@ -75,34 +75,43 @@ server.listen(port, () => {
         scriptPath: YOLO_DIR
     };
 
-    let pyshell = PythonShell.run('yolo_watcher.py', pyOptions, function(err) {
+    // let pyshell = PythonShell.run('yolo_watcher.py', pyOptions, function(err) {
+    //     if(err) { throw err; }
+    // });
+
+    let pyshell = PythonShell.run('TestStream.py', pyOptions, function(err) {
         if(err) { throw err; }
     });
 
-    pyshell.stdout.on('data', function(data) {
-        console.log("@@@@@@")
-        msg = data
-    });
-    // Pass python error statements
-    pyshell.on('stderr', function(stderr) {
-        console.log(stderr)
-    });
 
-    // Pass Python print statements from stdout
-    pyshell.on('message', function(message) {
-        console.log(message);
-    });
+    // pyshell.stdout.on('data', function(data) {
+    //     console.log("@@@@@@")
+    //     msg = data
+    // });
+    // // Pass python error statements
+    // pyshell.on('stderr', function(stderr) {
+    //     console.log(stderr)
+    // });
+
+    // // Pass Python print statements from stdout
+    // pyshell.on('message', function(message) {
+    //     console.log(message);
+    // });
 
     // Init web scraper based on JSON config file
-    let cameras = require('./cameras.json')
-    cameras.forEach(function(element) {
-        index = element.index
-        url = element.url
-        setInterval(scrape, INTERVAL, index, url)
-    });
-
+    // let cameras = require('./cameras.json')
+    // var index = cameras[0].index;
+    // var url = cameras[0].url;
+    // setInterval(scrape, INTERVAL, index, url);
+    // cameras.forEach(function(element) {
+    //     index = element.index
+    //     url = element.url
+    //     setInterval(scrape, INTERVAL, index, url)
+    // });
+    var i = 0;
     function scrape(index, url) {
-        let script = 'ffmpeg -y -i ' + url + ' ' + YOLO_DIR + 'input/' + 'location' + index + '.jpg'
+        let dir = YOLO_DIR + 'input/' + 'location' + index + '/';
+        let script = 'ffmpeg -y -i ' + url + ' ' + dir + 'location' + i++ + '.jpg'
         exec(script)
     };
     console.log("Server started on port" + port);
