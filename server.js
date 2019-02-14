@@ -68,6 +68,28 @@ const YOLO_DIR = './yolo/'
 const INTERVAL = 1000
 
 server.listen(port, () => {
+
+    //Create node-media-server
+    const { NodeMediaServer } = require('node-media-server');
+ 
+    const config = {
+      rtmp: {
+        port: 1935,
+        chunk_size: 60000,
+        gop_cache: true,
+        ping: 60,
+        ping_timeout: 30
+      },
+      http: {
+        port: 8000,
+        allow_origin: '*'
+      }
+    };
+     
+    var nms = new NodeMediaServer(config)
+    nms.run();
+
+
     let pyOptions = {
         mode: 'text',
         pythonOptions: ['-u'],
@@ -78,25 +100,25 @@ server.listen(port, () => {
     // let pyshell = PythonShell.run('yolo_watcher.py', pyOptions, function(err) {
     //     if(err) { throw err; }
     // });
-
-    let pyshell = PythonShell.run('TestStream.py', pyOptions, function(err) {
+    console.log('Run yolo_watcher.py');
+    let pyshell = PythonShell.run('yolo_watcher.py', pyOptions, function(err) {
         if(err) { throw err; }
     });
 
 
-    // pyshell.stdout.on('data', function(data) {
-    //     console.log("@@@@@@")
-    //     msg = data
-    // });
-    // // Pass python error statements
-    // pyshell.on('stderr', function(stderr) {
-    //     console.log(stderr)
-    // });
+    pyshell.stdout.on('data', function(data) {
+        console.log("@@@@@@")
+        msg = data
+    });
+    // Pass python error statements
+    pyshell.on('stderr', function(stderr) {
+        console.log(stderr)
+    });
 
-    // // Pass Python print statements from stdout
-    // pyshell.on('message', function(message) {
-    //     console.log(message);
-    // });
+    // Pass Python print statements from stdout
+    pyshell.on('message', function(message) {
+        console.log(message);
+    });
 
     // Init web scraper based on JSON config file
     // let cameras = require('./cameras.json')

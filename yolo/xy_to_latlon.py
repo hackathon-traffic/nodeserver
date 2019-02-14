@@ -3,7 +3,7 @@ import json
 
 class Transformer:
     def __init__(self, index):
-        camera_data = json.load(open('./cameras.json'))[index]
+        camera_data = json.load(open('../cameras.json'))[index]
 
         self.latitude = camera_data['latitude']
         self.longitude = camera_data['longitude']

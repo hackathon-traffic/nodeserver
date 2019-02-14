@@ -19,7 +19,9 @@ rtmp://wzmedia.dot.ca.gov/D4/W80_at_Ashby.stream
 2. Python
 3. OpenCV
 4. YOLO3-4-Py (https://github.com/madhawav/YOLO3-4-Py)
+5. Install FFMPEG (https://github.com/adaptlearning/adapt_authoring/wiki/Installing-FFmpeg)
 5. PyDarkNet (https://pjreddie.com/darknet/)
+    a. Move libdarknet.so into Yolo directory (For debug) and root directory (for production)
 6. Place weights into Yolo folder 
     a. (wget https://pjreddie.com/media/files/yolov3.weights) 
     b. into nodeserver/yolo/

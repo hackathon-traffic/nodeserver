@@ -4,46 +4,52 @@ import argparse
 import cv2
 import os
 import json
-
 import time
-from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
 
 from xy_to_latlon import Transformer
 
+YOLO_DIR = './yolo/'
+CURR_DIR = './'
+
 class Watcher:
-    def __init__(self):
-        self.DIRECTORY_TO_WATCH = './yolo/input'
-        print('Watching \'%s\' directory for images' % self.DIRECTORY_TO_WATCH)
-        self.observer = Observer()
 
     def run(self):
         event_handler = Handler()
-        self.observer.schedule(event_handler, self.DIRECTORY_TO_WATCH, recursive=True)
-        self.observer.start()
-        try:
-            while True:
-                time.sleep(5)
-        except:
-            self.observer.stop()
-            print("Error")
+        event_handler.run()
 
-        self.observer.join()
 
-class Handler(FileSystemEventHandler):
-    @staticmethod
-    def on_modified(event):
-        filename = os.path.basename(event.src_path)
-        if(filename.endswith(('.png', '.jpg', '.jpeg'))):
-            process_image(filename)
+class Handler():
 
-def process_image(filename):
-    input_img = './yolo/input/' + filename
-    output_img = './yolo/output/' + filename
-    output_json = './yolo/dat/' + filename.split('.')[0] + '.json'
-    output_dat = './yolo/dat/' + filename.split('.')[0] + '.dat'
+    def run(self):
+        print('creating cam')
+        camera_data = json.load(open('../cameras.json'))
+        streamName = 'rtmp://wzmedia.dot.ca.gov:1935/D4/E580_Lower_Deck_Pier_16.stream'
+        cam = cv2.VideoCapture(streamName)
+        count = 0
+        
+        # Default imageProcessing interval in seconds
+        imageProcessingInterval = 0.25
 
-    img = cv2.imread(input_img)
+        lastProcessed = time.time()
+
+        while True:
+            ret, img = cam.read()
+            if lastProcessed + imageProcessingInterval < time.time():
+                count += 1
+                print('Writing image: ', count)
+                lastProcessed = time.time()
+                filename = 'location2.jpg'
+                cv2.imwrite(CURR_DIR + 'output/location2.jpg', img)
+
+        # process_image(filename, img)
+        cam.release()
+
+def process_image(filename, img):
+
+    output_img = CURR_DIR + 'output/' + filename
+    output_json = CURR_DIR + 'dat/' + filename.split('.')[0] + '.json'
+    output_dat = CURR_DIR + 'dat/' + filename.split('.')[0] + '.dat'
+
     img2 = Image(img)
     height = float(img.shape[0])
     width = float(img.shape[1])
@@ -53,7 +59,6 @@ def process_image(filename):
     t = Transformer(index)
 
     results = net.detect(img2)
-
     bounding_boxes = [det[2] for det in results]
     data = {'detections': list()}
 
@@ -85,10 +90,16 @@ def process_image(filename):
     # json.dump(data, output, indent=4)
 
 if __name__ == "__main__":
-    darknet_path = os.environ['DARKNET_HOME']
-    config = os.path.join(darknet_path, 'cfg/yolov3.cfg')
-    weights = os.path.join(darknet_path, 'yolov3.weights')
-    coco = os.path.join(darknet_path, 'cfg/coco.data')
+    # config = os.path.join(YOLO_DIR, 'cfg/yolov3.cfg')
+    # coco = os.path.join(YOLO_DIR, 'cfg/coco.data')
+    # weights = os.path.join(YOLO_DIR, 'yolov3.weights')
+    # net = Detector(bytes(config, encoding="utf-8"), bytes(weights, encoding="utf-8"), 0, bytes(coco, encoding="utf-8"))
+
+    os.chdir('./yolo')
+
+    config = os.path.join(CURR_DIR, 'cfg/yolov3.cfg')
+    weights = os.path.join(CURR_DIR, 'yolov3.weights')
+    coco = os.path.join(CURR_DIR, 'cfg/coco.data')
 
     net = Detector(bytes(config, encoding="utf-8"), bytes(weights, encoding="utf-8"), 0, bytes(coco, encoding="utf-8"))
 
