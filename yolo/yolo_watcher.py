@@ -5,44 +5,58 @@ import cv2
 import os
 import json
 import time
+import threading
 
 from xy_to_latlon import Transformer
 
 YOLO_DIR = './yolo/'
 CURR_DIR = './'
 
+globalFrames =[None, None, None, None]
+
 class Watcher:
-
-    def run(self):
-        event_handler = Handler()
-        event_handler.run()
-
-
-class Handler():
 
     def run(self):
         print('creating cam')
         camera_data = json.load(open('../cameras.json'))
-        streamName = 'rtmp://wzmedia.dot.ca.gov:1935/D4/E580_Lower_Deck_Pier_16.stream'
-        cam = cv2.VideoCapture(streamName)
-        count = 0
-        
-        # Default imageProcessing interval in seconds
-        imageProcessingInterval = 0.25
 
-        lastProcessed = time.time()
+        cams = []
+        for camera in camera_data:
+            cams.append(cv2.VideoCapture(camera['url']))
 
-        while True:
-            ret, img = cam.read()
-            if lastProcessed + imageProcessingInterval < time.time():
-                count += 1
-                print('Writing image: ', count)
-                lastProcessed = time.time()
-                filename = 'location2.jpg'
-                cv2.imwrite(CURR_DIR + 'output/location2.jpg', img)
 
-        # process_image(filename, img)
+        for i in range(0, len(cams)):
+            thread = myThread(i, "Thread-" + str(i), i)
+            thread.start()
+
+        while True:  
+            #Go through cams and read frames        
+            for i in range(0, len(cams)):
+                ret, img = cams[i].read()
+                globalFrames[i] = img
+                    # cv2.imwrite(CURR_DIR + 'output/' + fileName, img)
+
         cam.release()
+
+#Thread that is passed the cam and shares the a
+class myThread (threading.Thread):
+   def __init__(self, threadID, name, counter):
+      threading.Thread.__init__(self)
+      self.threadID = threadID
+      self.name = name
+      self.counter = counter
+
+      
+   def run(self):
+      print('Hello World from ', self.name)
+      while True:
+        time.sleep(0.1)
+        img = globalFrames[self.counter]
+        fileName = 'location' + str(self.counter + 1) + '.jpg'
+        # cv2.imwrite(CURR_DIR + 'output/' + fileName, img)
+        process_image(fileName, img)
+         
+         
 
 def process_image(filename, img):
 
@@ -95,7 +109,7 @@ if __name__ == "__main__":
     # weights = os.path.join(YOLO_DIR, 'yolov3.weights')
     # net = Detector(bytes(config, encoding="utf-8"), bytes(weights, encoding="utf-8"), 0, bytes(coco, encoding="utf-8"))
 
-    os.chdir('./yolo')
+    # os.chdir('./yolo')
 
     config = os.path.join(CURR_DIR, 'cfg/yolov3.cfg')
     weights = os.path.join(CURR_DIR, 'yolov3.weights')
