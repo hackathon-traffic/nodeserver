@@ -48,12 +48,12 @@ class myThread (threading.Thread):
 
       
    def run(self):
-      print('Hello World from ', self.name)
-      while True:
-        time.sleep(0.1)
+    print('Hello World from ', self.name)
+    time.sleep(0.1)
+
+    while True:
         img = globalFrames[self.counter]
         fileName = 'location' + str(self.counter + 1) + '.jpg'
-        # cv2.imwrite(CURR_DIR + 'output/' + fileName, img)
         process_image(fileName, img)
          
          
@@ -104,12 +104,8 @@ def process_image(filename, img):
     # json.dump(data, output, indent=4)
 
 if __name__ == "__main__":
-    # config = os.path.join(YOLO_DIR, 'cfg/yolov3.cfg')
-    # coco = os.path.join(YOLO_DIR, 'cfg/coco.data')
-    # weights = os.path.join(YOLO_DIR, 'yolov3.weights')
-    # net = Detector(bytes(config, encoding="utf-8"), bytes(weights, encoding="utf-8"), 0, bytes(coco, encoding="utf-8"))
 
-    # os.chdir('./yolo')
+    os.chdir('./yolo')
 
     config = os.path.join(CURR_DIR, 'cfg/yolov3.cfg')
     weights = os.path.join(CURR_DIR, 'yolov3.weights')
