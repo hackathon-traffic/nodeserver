@@ -62,7 +62,6 @@ def process_image(filename, img):
 
     output_img = CURR_DIR + 'output/' + filename
     output_json = CURR_DIR + 'dat/' + filename.split('.')[0] + '.json'
-    output_dat = CURR_DIR + 'dat/' + filename.split('.')[0] + '.dat'
 
     img2 = Image(img)
     height = float(img.shape[0])
@@ -77,7 +76,6 @@ def process_image(filename, img):
     data = {'detections': list()}
 
 
-    output = open(output_dat, 'w')
     # Draw bounding boxes on output image
     for x, y, w, h in bounding_boxes:
         cv2.rectangle(img, (int(x - w / 2), int(y - h / 2)), (int(x + w / 2), int(y + h / 2)), (255, 0, 0), thickness=1)
