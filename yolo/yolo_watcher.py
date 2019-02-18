@@ -53,8 +53,10 @@ class myThread (threading.Thread):
 
     while True:
         img = globalFrames[self.counter]
+        b,g,r = cv2.split(img)       # get b,g,r
+        rgb_img = cv2.merge([r,g,b])
         fileName = 'location' + str(self.counter + 1) + '.jpg'
-        process_image(fileName, img)
+        process_image(fileName, rgb_img)
          
          
 
