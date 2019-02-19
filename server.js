@@ -31,7 +31,7 @@ socket.on('connect', (socket) => {
             persistent: true
         });
         watcher.on('change', path => {
-            console.log('😋');
+            // console.log('😋');
             emitImageBuffer(socket, msg.filename)
         })
     })
@@ -43,7 +43,7 @@ socket.on('connect', (socket) => {
 
 
 function emitImageBuffer(privateSocket, filename) {
-    console.log(filename);
+    // console.log(filename);
     
     fs.readFile(__dirname + '/yolo/output/' + filename + '.jpg',  function (err, imgBuffer) {
 
