@@ -53,11 +53,18 @@ class myThread (threading.Thread):
 
     while True:
         img = globalFrames[self.counter]
-        b,g,r = cv2.split(img)       # get b,g,r
-        rgb_img = cv2.merge([r,g,b])
-        fileName = 'location' + str(self.counter + 1) + '.jpg'
-        process_image(fileName, rgb_img)
-         
+
+        #Possible error trying to converrt to rgb
+        try:
+            b,g,r = cv2.split(img)      
+            rgb_img = cv2.merge([r,g,b])
+            fileName = 'location' + str(self.counter + 1) + '.jpg'
+            process_image(fileName, rgb_img)
+
+        except:
+             #do nothing
+
+
          
 
 def process_image(filename, img):
