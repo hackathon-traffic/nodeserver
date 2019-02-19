@@ -86,7 +86,7 @@ server.listen(port, () => {
 
 
     pyshell.stdout.on('data', function(data) {
-        console.log("@@@@@@")
+        // console.log("@@@@@@")
         msg = data
     });
     // Pass python error statements

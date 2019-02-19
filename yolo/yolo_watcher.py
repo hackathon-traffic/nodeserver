@@ -99,7 +99,7 @@ def process_image(filename, img):
                            "east_disp": int(e),
                            "latitude": lat,
                            "longitude": lon})
-    print('%s\n' % data)
+    # print('%s\n' % data)
     
     output = open(output_json, 'w')
     json.dump(data, output, indent=4)
