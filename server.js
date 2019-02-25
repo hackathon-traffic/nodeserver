@@ -16,48 +16,24 @@ app.use(express.static(publicPath));
 
 var msg = ""
 
+
 var server = require('http').createServer(app);
 var socket = require('socket.io')(server);
 
-socket.on('connect', (socket) => {
-    console.log(socket.id);
+socket.on('connect', (io) => {
+    console.log(io.id);
     console.log('user connected')
 
-
-    socket.on('filename', (msg) => {
+    io.on('filename', (msg) => {
         console.log('Got the emitted file ' + msg.filename);
-        var watcher = chokidar.watch(__dirname + '/yolo/dat/' + msg.filename + '.json', {
-            ignored: /(^|[\/\\])\../,
-            persistent: true
-        });
-        watcher.on('change', path => {
-            // console.log('😋');
-            emitImageBuffer(socket, msg.filename)
-        })
+        io.join(parseInt(msg.filename));
     })
-    socket.on('disconnect', () => {
+    io.on('disconnect', () => {
+        io.leaveAll();
         console.log("socket disconnected");
     })
 })
 
-
-
-function emitImageBuffer(privateSocket, filename) {
-    // console.log(filename);
-    
-    fs.readFile(__dirname + '/yolo/output/' + filename + '.jpg',  function (err, imgBuffer) {
-
-        fs.readFile(__dirname + '/yolo/dat/' + filename + '.json', (err, textBuffer) => {
-            let text = textBuffer;
-            privateSocket.emit('image', {
-                image: true, buffer: imgBuffer.toString('base64')
-            });
-            privateSocket.emit('text', msg);
-        });
-
-
-    });
-}
 
 app.set('view engine', 'ejs');
 
@@ -86,7 +62,7 @@ server.listen(port, () => {
 
 
     pyshell.stdout.on('data', function(data) {
-        // console.log("@@@@@@")
+        console.log(data)
         msg = data
     });
     // Pass python error statements
@@ -96,24 +72,21 @@ server.listen(port, () => {
 
     // Pass Python print statements from stdout
     pyshell.on('message', function(message) {
-        console.log(message);
+        // console.log('Got print statement from pyshell')
+        try { 
+            var imgAndInfo = JSON.parse(message);
+            socket.in(imgAndInfo['index']).emit('image', {
+                image: true, buffer: imgAndInfo['img64']
+            });
+            // socket.emit('image', {
+            //     image: true, buffer: imgAndInfo['img64']
+            // });
+        }catch(e) {
+            console.log('Exceptipn ', e);
+            console.log('***********ERROR JSON BEGIN **************')
+            console.log(message)
+            console.log('***********ERROR JSON END *****************')
+        }
     });
-
-    // Init web scraper based on JSON config file
-    // let cameras = require('./cameras.json')
-    // var index = cameras[0].index;
-    // var url = cameras[0].url;
-    // setInterval(scrape, INTERVAL, index, url);
-    // cameras.forEach(function(element) {
-    //     index = element.index
-    //     url = element.url
-    //     setInterval(scrape, INTERVAL, index, url)
-    // });
-    var i = 0;
-    function scrape(index, url) {
-        let dir = YOLO_DIR + 'input/' + 'location' + index + '/';
-        let script = 'ffmpeg -y -i ' + url + ' ' + dir + 'location' + i++ + '.jpg'
-        exec(script)
-    };
     console.log("Server started on port" + port);
 });
