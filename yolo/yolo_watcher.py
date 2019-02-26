@@ -120,7 +120,6 @@ class ProcessThread (threading.Thread):
             returnData['index'] = self.counter
             returnData['img64'] = jpg_as_text
             print(json.dumps(returnData))
-            time.sleep(0.5)
             
 
             # process_image(fileName, rgb_img)
