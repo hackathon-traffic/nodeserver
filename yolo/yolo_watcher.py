@@ -22,12 +22,12 @@ class Watcher:
         print('creating cam')
         camera_data = json.load(open('../cameras.json'))
 
-        # thread = ReadImageThread(2, "Thread-" + str(2), 2, camera_data[2])
-        # thread.start()
+        thread = ReadImageThread(1, "Thread-" + str(1), 1, camera_data[1])
+        thread.start()
 
-        for i in range(0, len(camera_data)):
-            thread = ReadImageThread(i, "Thread-" + str(i), i, camera_data[i])
-            thread.start()
+        # for i in range(0, len(camera_data)):
+        #     thread = ReadImageThread(i, "Thread-" + str(i), i, camera_data[i])
+        #     thread.start()
 
 #Thread that is passed the cam and shares the a
 class ReadImageThread (threading.Thread):

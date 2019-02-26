@@ -26,7 +26,7 @@ socket.on('connect', (io) => {
 
     io.on('filename', (msg) => {
         console.log('Got the emitted file ' + msg.filename);
-        io.join(parseInt(msg.filename));
+        // io.join(parseInt(msg.filename));
     })
     io.on('disconnect', () => {
         io.leaveAll();
@@ -75,9 +75,10 @@ server.listen(port, () => {
         // console.log('Got print statement from pyshell')
         try { 
             var imgAndInfo = JSON.parse(message);
-            socket.in(imgAndInfo['index']).emit('image', {
-                image: true, buffer: imgAndInfo['img64']
-            });
+            socket.emit("json", message);
+            // socket.in(imgAndInfo['index']).emit('image', {
+            //     image: true, buffer: imgAndInfo['img64']
+            // });
             // socket.emit('image', {
             //     image: true, buffer: imgAndInfo['img64']
             // });
