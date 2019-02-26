@@ -48,11 +48,7 @@ class ReadImageThread (threading.Thread):
         thread = ProcessThread(self.counter, "Thread-" + str(self.counter), self.counter)
         thread.start()
 
-        counter = 0
         while True:
-            if counter == 100000:
-                break
-            counter +=1
             ret, img = cam.read()
             globalFrames[self.counter] = img
 
@@ -75,9 +71,6 @@ class ProcessThread (threading.Thread):
     counter = 0
 
     while True:
-        counter += 1
-        if counter == 100000:
-            break
 
         img = globalFrames[self.counter]
         
@@ -94,30 +87,30 @@ class ProcessThread (threading.Thread):
 
             returnData = {}
             #TODO// UNCOMMENT TO PROCESS THE IMAGE
-            # img2 = Image(img)
-            # height = float(img.shape[0])
-            # width = float(img.shape[1])
+            img2 = Image(img)
+            height = float(img.shape[0])
+            width = float(img.shape[1])
 
-            # # Load Camera metadata from JSON file for transform
-            # index = self.counter
-            # t = Transformer(index)
+            # Load Camera metadata from JSON file for transform
+            index = self.counter
+            t = Transformer(index)
 
-            # results = net.detect(img2)
-            # bounding_boxes = [det[2] for det in results]
-            # returnData['detections'] = list()
+            results = net.detect(img2)
+            bounding_boxes = [det[2] for det in results]
+            returnData['detections'] = list()
 
 
-            # # Draw bounding boxes on output image
-            # for x, y, w, h in bounding_boxes:
-            #     cv2.rectangle(img, (int(x - w / 2), int(y - h / 2)), (int(x + w / 2), int(y + h / 2)), (255, 0, 0), thickness=1)
-            #     n, e, lat, lon = t.transform(x, y, width, height)
+            # Draw bounding boxes on output image
+            for x, y, w, h in bounding_boxes:
+                cv2.rectangle(img, (int(x - w / 2), int(y - h / 2)), (int(x + w / 2), int(y + h / 2)), (255, 0, 0), thickness=1)
+                n, e, lat, lon = t.transform(x, y, width, height)
                     
-            #     returnData['detections'].append({"screen_x": int(x),
-            #         "screen_y": int(y),
-            #         "north_disp": int(n),
-            #         "east_disp": int(e),
-            #         "latitude": lat,
-            #         "longitude": lon})
+                returnData['detections'].append({"screen_x": int(x),
+                    "screen_y": int(y),
+                    "north_disp": int(n),
+                    "east_disp": int(e),
+                    "latitude": lat,
+                    "longitude": lon})
 
 
             retval, buffer = cv2.imencode('.jpg', img)
