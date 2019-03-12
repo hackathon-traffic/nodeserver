@@ -4,9 +4,6 @@ const path = require('path');
 const express = require('express');
 const controller = require('./controller.js');
 const publicPath = path.join(__dirname + '/public');
-const fs = require('fs');
-const chokidar = require('chokidar');
-const openvideocontroller = require('./openvideocontroller.js');
 
 //for using http server instead of express server 
 var app = express();
@@ -18,18 +15,19 @@ var msg = ""
 
 
 var server = require('http').createServer(app);
-var socket = require('socket.io')(server);
+var io = require('socket.io')(server);
 
-socket.on('connect', (io) => {
-    console.log(io.id);
+io.on('connect', (socket) => {
+    console.log(socket.id);
     console.log('user connected')
 
-    io.on('filename', (msg) => {
+    socket.on('filename', (msg) => {
         console.log('Got the emitted file ' + msg.filename);
-        // io.join(parseInt(msg.filename));
+        socket.leaveAll();
+        socket.join(0);
     })
-    io.on('disconnect', () => {
-        io.leaveAll();
+    socket.on('disconnect', () => {
+        socket.leaveAll();
         console.log("socket disconnected");
     })
 })
@@ -45,12 +43,52 @@ const INTERVAL = 1000
 
 server.listen(port, () => {
 
-    let pyOptions = {
-        mode: 'text',
-        pythonOptions: ['-u'],
-        stdout: [],
-        scriptPath: YOLO_DIR
-    };
+
+    var cameraJson = require('./cameras.json');
+    
+    //Go through all cameras in json and start up equivalent amount of
+    //Camera jsons
+    
+    var i;
+    for (i = 0; i < 1; i++) { 
+        let pyOptions = {
+            mode: 'text',
+            pythonOptions: ['-u'],
+            stdout: [],
+            scriptPath: YOLO_DIR,
+            args: [JSON.stringify(cameraJson[i])]
+        };
+        console.log('Run yolo_watcher.py');
+        let pyshell = PythonShell.run('yolo_watcher.py', pyOptions, function(err) {
+            if(err) { throw err; }
+        });
+        // Pass Python print statements from stdout
+        pyshell.on('message', function(message) {
+            console.log(message)
+            try { 
+                JSON.parse(message);
+                io.in(i).emit("json", message);
+                // io.emit("json", message);
+            }catch(e) {
+                console.log('Exceptipn ', e);
+                console.log('***********ERROR JSON BEGIN **************')
+                console.log(message)
+                console.log('***********ERROR JSON END *****************')
+            }
+        });
+
+        // Pass python error statements
+        pyshell.on('stderr', function(stderr) {
+            console.log(stderr)
+        });
+    }
+
+    console.log("Server started on port" + port);
+
+    return;
+
+
+
 
     // let pyshell = PythonShell.run('yolo_watcher.py', pyOptions, function(err) {
     //     if(err) { throw err; }
@@ -60,15 +98,13 @@ server.listen(port, () => {
         if(err) { throw err; }
     });
 
-
-    pyshell.stdout.on('data', function(data) {
-        console.log(data)
-        msg = data
-    });
     // Pass python error statements
     pyshell.on('stderr', function(stderr) {
         console.log(stderr)
     });
+
+
+    
 
     // Pass Python print statements from stdout
     pyshell.on('message', function(message) {
@@ -89,5 +125,4 @@ server.listen(port, () => {
             console.log('***********ERROR JSON END *****************')
         }
     });
-    console.log("Server started on port" + port);
 });

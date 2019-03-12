@@ -7,60 +7,22 @@ import json
 import time
 import threading
 import base64
+import sys
 
 from xy_to_latlon import Transformer
 
 YOLO_DIR = './yolo/'
 CURR_DIR = './'
 
-# globalCams = []
-globalFrames =[None, None, None, None]
+globalFrame = None
 
-class Watcher:
-
-    def run(self):
-        print('creating cam')
-        camera_data = json.load(open('../cameras.json'))
-
-        thread = ReadImageThread(1, "Thread-" + str(1), 1, camera_data[1])
-        thread.start()
-
-        # for i in range(0, len(camera_data)):
-        #     thread = ReadImageThread(i, "Thread-" + str(i), i, camera_data[i])
-        #     thread.start()
-
-#Thread that is passed the cam and shares the a
-class ReadImageThread (threading.Thread):
-    def __init__(self, threadID, name, counter, cameraJson):
-        threading.Thread.__init__(self)
-        self.threadID = threadID
-        self.name = name
-        self.counter = counter
-        self.cameraJson = cameraJson
-
-      
-    def run(self):
-        # print('Hello World from Camera Thread ', self.name)
-        cam = cv2.VideoCapture(self.cameraJson['url'])
-        # print('Camera initialized')
-
-        #TODO: Uncomment and test
-        thread = ProcessThread(self.counter, "Thread-" + str(self.counter), self.counter)
-        thread.start()
-
-        while True:
-            ret, img = cam.read()
-            globalFrames[self.counter] = img
-
-        cam.release()
-
-#Thread that Process the images from globalFrames
+#Thread that Process the image from globalFrame
 class ProcessThread (threading.Thread):
-   def __init__(self, threadID, name, counter):
+   def __init__(self, threadID, name, cameraJson):
       threading.Thread.__init__(self)
       self.threadID = threadID
       self.name = name
-      self.counter = counter
+      self.cameraJson = cameraJson
 
       
    def run(self):
@@ -72,8 +34,18 @@ class ProcessThread (threading.Thread):
 
     while True:
 
-        img = globalFrames[self.counter]
-        
+        img = globalFrame
+
+        #Just to test throughput on local
+        returnData = {}
+        retval, buffer = cv2.imencode('.jpg', img)
+        base64_bytes = base64.b64encode(buffer)
+        jpg_as_text = base64_bytes.decode('utf-8')
+        returnData['img64'] = jpg_as_text
+        print(json.dumps(returnData))
+        time.sleep(2)
+        continue    
+
         if img is None:
             # print('Img is none, so skip')
             time.sleep(0.25)
@@ -92,8 +64,7 @@ class ProcessThread (threading.Thread):
             width = float(img.shape[1])
 
             # Load Camera metadata from JSON file for transform
-            index = self.counter
-            t = Transformer(index)
+            t = Transformer(self.cameraJson)
 
             results = net.detect(img2)
             bounding_boxes = [det[2] for det in results]
@@ -116,21 +87,20 @@ class ProcessThread (threading.Thread):
             retval, buffer = cv2.imencode('.jpg', img)
             base64_bytes = base64.b64encode(buffer)
             jpg_as_text = base64_bytes.decode('utf-8')
-
-            returnData['index'] = self.counter
             returnData['img64'] = jpg_as_text
             print(json.dumps(returnData))
             
 
             # process_image(fileName, rgb_img)
         except Exception as e:
-            print('Exceptions in thread ' + str(self.counter) + ', ' + str(e))
+            print('Exceptions in thread ' + str(self.cameraJson['index']) + ', ' + str(e))
              #do nothing
          
 
-
+#Main - Opens camera and writes info into globalFrame forever
 if __name__ == "__main__":
 
+    print('Hello world')
     # FOR DEBUGGING PURPOSES. When called from server.js, need to switch into
     #Yolo directory. When called from python3, this will throw exception
     try: 
@@ -144,5 +114,21 @@ if __name__ == "__main__":
 
     net = Detector(bytes(config, encoding="utf-8"), bytes(weights, encoding="utf-8"), 0, bytes(coco, encoding="utf-8"))
 
-    w = Watcher()
-    w.run() 
+    print('creating cam')
+
+    # camera_data = json.load(open('../cameras.json'))
+    # cameraJson = camera_data[0]
+    #TODO: Use this instead of reading from file
+    cameraJson = json.loads(sys.argv[1])
+    cameraIndex = cameraJson['index']
+    cam = cv2.VideoCapture(cameraJson['url'])
+
+    #TODO: Uncomment and test
+    thread = ProcessThread(cameraIndex, "Thread-" + str(cameraIndex), cameraJson)
+    thread.start()
+
+    while True:
+        ret, img = cam.read()
+        globalFrame = img
+
+    cam.release()

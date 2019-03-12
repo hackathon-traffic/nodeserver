@@ -2,8 +2,8 @@ from numpy import sin, cos, tan, radians, degrees
 import json
 
 class Transformer:
-    def __init__(self, index):
-        camera_data = json.load(open('../cameras.json'))[index]
+    def __init__(self, cameraJson):
+        camera_data = cameraJson
 
         self.latitude = camera_data['latitude']
         self.longitude = camera_data['longitude']
