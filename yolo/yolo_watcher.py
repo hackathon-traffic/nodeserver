@@ -8,7 +8,6 @@ import time
 import threading
 import base64
 import sys
-
 from xy_to_latlon import Transformer
 
 YOLO_DIR = './yolo/'
@@ -53,10 +52,6 @@ class ProcessThread (threading.Thread):
 
         #Possible error trying to converrt to rgb
         try:
-            # b,g,r = cv2.split(img)      
-            # rgb_img = cv2.merge([r,g,b])
-            # image = cv2.imread('./output/location1.jpg', cv2.IMREAD_COLOR)
-
             returnData = {}
             #TODO// UNCOMMENT TO PROCESS THE IMAGE
             img2 = Image(img)
@@ -130,5 +125,4 @@ if __name__ == "__main__":
     while True:
         ret, img = cam.read()
         globalFrame = img
-
     cam.release()
