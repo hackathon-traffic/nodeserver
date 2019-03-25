@@ -61,17 +61,19 @@ class ProcessThread (threading.Thread):
                 cv2.rectangle(img, (int(x - w / 2), int(y - h / 2)), (int(x + w / 2), int(y + h / 2)), (255, 0, 0), thickness=1)
                 n, e, lat, lon = t.transform(x, y, width, height)
                     
-                returnData['detections'].append({"screen_x": int(x),
-                    "screen_y": int(y),
-                    "north_disp": int(n),
-                    "east_disp": int(e),
+                returnData['detections'].append({"screen_x": x,
+                    "screen_y": y,
+                    "width":w,
+                    "height":h,
+                    "north_disp": n,
+                    "east_disp": e,
                     "latitude": lat,
-                    "longitude": lon})
+                    "longitude": lon}
+                )
 
             json_data = json.dumps(returnData)
             print(json_data)
-
-            retval, buffer = cv2.imencode('.jpg', img2)
+            retval, buffer = cv2.imencode('.jpg', img)
             base64_bytes = base64.b64encode(buffer)
             jpg_as_text = base64_bytes.decode('utf-8')
             print(jpg_as_text)
