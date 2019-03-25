@@ -42,7 +42,6 @@ class ProcessThread (threading.Thread):
 
         #Possible error trying to converrt to rgb
         try:
-            returnData = {}
             #TODO// UNCOMMENT TO PROCESS THE IMAGE
             img2 = Image(img)
             height = float(img.shape[0])
@@ -53,6 +52,7 @@ class ProcessThread (threading.Thread):
 
             results = net.detect(img2)
             bounding_boxes = [det[2] for det in results]
+            returnData = {}
             returnData['detections'] = list()
 
 
@@ -76,8 +76,6 @@ class ProcessThread (threading.Thread):
             jpg_as_text = base64_bytes.decode('utf-8')
             print(jpg_as_text)
             
-
-            # process_image(fileName, rgb_img)
         except Exception as e:
             print('Exceptions in thread ' + str(self.cameraJson['index']) + ', ' + str(e))
              #do nothing
@@ -100,13 +98,9 @@ if __name__ == "__main__":
 
     net = Detector(bytes(config, encoding="utf-8"), bytes(weights, encoding="utf-8"), 0, bytes(coco, encoding="utf-8"))
 
-    print('creating cam')
-
-    camera_data = json.load(open('../cameras.json'))
-    cameraJson = camera_data[0]
     #TODO: Use this instead of reading from file
-    # cameraJson = json.loads(sys.argv[1])
-    # cameraIndex = cameraJson['index']
+    cameraJson = json.loads(sys.argv[1])
+    cameraIndex = cameraJson['index']
 
     cam = cv2.VideoCapture(cameraJson['url'])
 
@@ -117,16 +111,5 @@ if __name__ == "__main__":
     while True:
         ret, img = cam.read()
         globalFrame = img
-
-        #test socket for img
-        retval, buffer = cv2.imencode('.jpg', img)
-        base64_bytes = base64.b64encode(buffer)
-        jpg_as_text = base64_bytes.decode('utf-8')
-        print(jpg_as_text)
-
-        #test socket io for json
-        data = {}
-        data['key'] = 'value'
-        json_data = json.dumps(data)
-        print(json_data)
+        
     cam.release()
