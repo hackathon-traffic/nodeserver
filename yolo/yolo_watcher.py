@@ -105,8 +105,8 @@ if __name__ == "__main__":
     cam = cv2.VideoCapture(cameraJson['url'])
 
     #TODO: Uncomment and test
-    # thread = ProcessThread(cameraIndex, "Thread-" + str(cameraIndex), cameraJson)
-    # thread.start()
+    thread = ProcessThread(cameraIndex, "Thread-" + str(cameraIndex), cameraJson)
+    thread.start()
 
     while True:
         ret, img = cam.read()
