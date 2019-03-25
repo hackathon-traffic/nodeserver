@@ -66,8 +66,14 @@ server.listen(port, () => {
         pyshell.on('message', function(message) {
             console.log(message)
             try { 
-                JSON.parse(message);
-                io.in(i).emit("json", message);
+                // JSON.parse(message);
+                // io.in(i).emit("json", message);
+                if(message.charAt(0) == "{") {
+                    io.emit('json', message);
+                }
+                else {
+                    io.emit('img', { image: true, buffer: message});
+                }
                 // io.emit("json", message);
             }catch(e) {
                 console.log('Exceptipn ', e);
@@ -84,45 +90,5 @@ server.listen(port, () => {
     }
 
     console.log("Server started on port" + port);
-
-    return;
-
-
-
-
-    // let pyshell = PythonShell.run('yolo_watcher.py', pyOptions, function(err) {
-    //     if(err) { throw err; }
-    // });
-    console.log('Run yolo_watcher.py');
-    let pyshell = PythonShell.run('yolo_watcher.py', pyOptions, function(err) {
-        if(err) { throw err; }
-    });
-
-    // Pass python error statements
-    pyshell.on('stderr', function(stderr) {
-        console.log(stderr)
-    });
-
-
     
-
-    // Pass Python print statements from stdout
-    pyshell.on('message', function(message) {
-        // console.log('Got print statement from pyshell')
-        try { 
-            var imgAndInfo = JSON.parse(message);
-            socket.emit("json", message);
-            // socket.in(imgAndInfo['index']).emit('image', {
-            //     image: true, buffer: imgAndInfo['img64']
-            // });
-            // socket.emit('image', {
-            //     image: true, buffer: imgAndInfo['img64']
-            // });
-        }catch(e) {
-            console.log('Exceptipn ', e);
-            console.log('***********ERROR JSON BEGIN **************')
-            console.log(message)
-            console.log('***********ERROR JSON END *****************')
-        }
-    });
 });

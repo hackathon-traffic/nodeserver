@@ -35,16 +35,6 @@ class ProcessThread (threading.Thread):
 
         img = globalFrame
 
-        #Just to test throughput on local
-        returnData = {}
-        retval, buffer = cv2.imencode('.jpg', img)
-        base64_bytes = base64.b64encode(buffer)
-        jpg_as_text = base64_bytes.decode('utf-8')
-        returnData['img64'] = jpg_as_text
-        print(json.dumps(returnData))
-        time.sleep(2)
-        continue    
-
         if img is None:
             # print('Img is none, so skip')
             time.sleep(0.25)
@@ -78,12 +68,13 @@ class ProcessThread (threading.Thread):
                     "latitude": lat,
                     "longitude": lon})
 
+            json_data = json.dumps(returnData)
+            print(json_data)
 
-            retval, buffer = cv2.imencode('.jpg', img)
+            retval, buffer = cv2.imencode('.jpg', img2)
             base64_bytes = base64.b64encode(buffer)
             jpg_as_text = base64_bytes.decode('utf-8')
-            returnData['img64'] = jpg_as_text
-            print(json.dumps(returnData))
+            print(jpg_as_text)
             
 
             # process_image(fileName, rgb_img)
@@ -111,18 +102,31 @@ if __name__ == "__main__":
 
     print('creating cam')
 
-    # camera_data = json.load(open('../cameras.json'))
-    # cameraJson = camera_data[0]
+    camera_data = json.load(open('../cameras.json'))
+    cameraJson = camera_data[0]
     #TODO: Use this instead of reading from file
-    cameraJson = json.loads(sys.argv[1])
-    cameraIndex = cameraJson['index']
+    # cameraJson = json.loads(sys.argv[1])
+    # cameraIndex = cameraJson['index']
+
     cam = cv2.VideoCapture(cameraJson['url'])
 
     #TODO: Uncomment and test
-    thread = ProcessThread(cameraIndex, "Thread-" + str(cameraIndex), cameraJson)
-    thread.start()
+    # thread = ProcessThread(cameraIndex, "Thread-" + str(cameraIndex), cameraJson)
+    # thread.start()
 
     while True:
         ret, img = cam.read()
         globalFrame = img
+
+        #test socket for img
+        retval, buffer = cv2.imencode('.jpg', img)
+        base64_bytes = base64.b64encode(buffer)
+        jpg_as_text = base64_bytes.decode('utf-8')
+        print(jpg_as_text)
+
+        #test socket io for json
+        data = {}
+        data['key'] = 'value'
+        json_data = json.dumps(data)
+        print(json_data)
     cam.release()
