@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "realtime-traffic-231501",
+  "private_key_id": "5a7240ffe516a62bb6039bc209bcaa4c2f33b3c6",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCvVmg7ae61OsSd\nDbe6ZaFv5+KxwTyEYReHCezl/Pk25NbImLDaXSb1vUd19rzgAtj/V3XdZ8jjYgcL\nlD00rWXiAvJlLoW804x7tWd3q7KadcAwAEMBEplY9hZo+8ChBryxEutpmp3rfHpI\niNO4UscciMTnbd/2uOqO2YH2lQedB6LT6LWx2IU5ysanlSoXBppuIjoKj8q0zx+T\nQdevTPybQLlE4+MGPwYnMxsHZaAlVfFBC4B3MnUF6plFg0GwLVA+CwpIUHQJhZeg\n2mo4yq0CRmClAFL/d0juaqa/VFppcslwZDqCcM4TI+kEI8/5c+fPDbrOy8RcST/S\nlD1z67P3AgMBAAECggEAGQwM47/kO7tjbtQQ1O3DvAqyFZZ3IKoGBGJklw4mQ7M5\nA3rceLUp5ZzeYnmWzaFagk9qJPC4f9L3Eq5gd+/1R+4H1nBo5mqJ/PoTB8NdRjdf\n9vtyluqjQVQWK3UbNWWS+vCq9HED8incBhSVuhUJIIhhKHZHsiUETNfBewobBlFd\n0oQQAcDCQJ/cAa0k24B4hBXnd4b2z80m2vZKjcSABWB72KAHdPY9W9O0NS5h5MMv\nOjtk85QvPaG9A2JDhrBEyBs4w3tHRUk0GoWzfntEtqmDANvn2VYk7FhoDwL1FcGD\nW8z+0qemRpFC0YgYjTIo/R+eT/W7p02TLAM63SieAQKBgQDzV3BMPBntqks5atsc\nclrT3HwZ5NG+JzF/eCOqqkeBt/iFarySAVKtX1zPigEcqH4qCXM3THhMv6VKCxD/\nZTGUdvZIeK1IyS4+Rhcy8Invu3cqkkjXWhIE4sm+jHTsqGh0bB+msDcXHYoOJd5Q\nRDjikaJhE2NGuDNIJkySv77KgQKBgQC4dV0plol9G5vdCpmbp0J/nzNKYg2AzSpg\nm9Mn0pG1dpnR7aBXZAk2wxrRyD73q7yZE1GmVKSIXk6kyUJvjKuu3FrmRP/KtaLy\nN+BPZSmguxKK8Mja03GsUwQoJXI2OZ0WXJTKFRjuMIOO/iFY1+JPQQMg3epxXLzP\nptrPt76SdwKBgQCC8qPAsnr1dTWD0WfVuAf+iGDUAlmILUkqojj3RyixupFnIlgV\nbdbS60VjfY05ocY60tkIggMesea9oJTmCsuSbC3+M8p0J6bV5hvn0p83vbbT1uKR\n2Ktnq68K9kSZccq8E884gQ00SDYZhPFMWloOOnaaLLe4v7kA83MzaTG/gQKBgQCz\nPjjdZM8Np3p5/QbvXkUcRtNMgKOmebeoUUOK+u9kam9ms4aP5UGe2VCCchfeDCAk\nj8VT4ARSD3JUZs4MH6HlNXOPN5VoocBJp0ptXFxrN9347aoAGl/nmHP9nwWw86NW\nS3i6Nm4XZ0Uv+nrlHkNnyEEF+x8KMZe4IOeX2XFyWQKBgDBEaz3YGIfPXVLM5ecF\nTWInkhV30KchdNRk6aDTRWNPGByApwVK/bIHl5ZaZ96qkbsRA2zioJqqqzikM5QR\nvi9AVB3v16tZzr9SYcykZBL/Y2QEzMEoEyRbxv161aaov6vQwzhtJGnKYCQOLIqs\nOOLYeE8romo7Ag/DpkmJCfDK\n-----END PRIVATE KEY-----\n",
+  "client_email": "admin-962@realtime-traffic-231501.iam.gserviceaccount.com",
+  "client_id": "103927978068216054882",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/admin-962%40realtime-traffic-231501.iam.gserviceaccount.com"
+}
