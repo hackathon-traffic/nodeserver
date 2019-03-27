@@ -71,12 +71,12 @@ class ProcessThread (threading.Thread):
                     "longitude": lon}
                 )
             
-            millis = int(round(time.time() * 1000))
+            # millis = int(round(time.time() * 1000))
 
-            large = cv2.resize(img, (0,0), fx=1, fy=1)
-            cv2.imwrite('../../output_img/' + str(millis) + '.jpg', large)
-            f= open('../../output_json/' + str(millis) + '.json', "w+")
-            json.dump(returnData, f)
+            # large = cv2.resize(img, (0,0), fx=1, fy=1)
+            # cv2.imwrite('../../output_img/' + str(millis) + '.jpg', large)
+            # f= open('../../output_json/' + str(millis) + '.json', "w+")
+            # json.dump(returnData, f)
 
             json_data = json.dumps(returnData)
             print(json_data)
