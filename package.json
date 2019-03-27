@@ -10,7 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@google-cloud/storage": "^2.4.3",
     "body-parser": "^1.18.3",
     "chokidar": "^2.1.0",
     "ejs": "^2.6.1",

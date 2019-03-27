@@ -4,18 +4,6 @@ const path = require('path');
 const express = require('express');
 const controller = require('./controller.js');
 const publicPath = path.join(__dirname + '/public');
-var firebase = require('firebase');
-var stream = require('stream');
-const Multer = require('multer');
-var stream = require('stream');
-
-const {Storage} = require('@google-cloud/storage');
-// Creates a client
-const storage = new Storage({
-  projectId: 'realtime-traffic-231501',
-  keyFilename: "./realtime-traffic-231501-5a7240ffe516.json"
-});
-
 
 
 //for using http server instead of express server 
@@ -76,22 +64,12 @@ server.listen(port, () => {
     // Pass Python print statements from stdout
     pyshell.on('message', function(message) {
         console.log(message) 
-        var timestamp = Date.now();
         try { 
-            // JSON.parse(message);
-            // io.in(i).emit("json", message);
             if(message.charAt(0) == "{") {
                 io.emit('json', message);
             }
             else {
                 io.emit('img', { image: true, buffer: message});
-                var bufferStream = new stream.PassThrough();
-                bufferStream.end(Buffer.from(message, 'base64'));
-                //Define bucket.
-                var myBucket = storage.bucket('my-bucket');
-                //Define file & file name.
-                var file = myBucket.file(timestamp + '.jpg');
-                //Pipe the 'bufferStream' into a 'file.createWriteStream' method.
             }
         }catch(e) {
             console.log('Exceptipn ', e);
